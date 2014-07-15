@@ -210,6 +210,7 @@ void MScore::init()
 #endif
       initScoreFonts();
       StaffType::initStaffTypes();
+      StaffTypeTemplate::initUserTemplates(); //cc
       initDrumset();
       FiguredBass::readConfigFile(0);
       }

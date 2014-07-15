@@ -1307,7 +1307,7 @@ void GuitarPro2::read(QFile* fp)
                   clefId = ClefType::PERC;
                   // instr->setUseDrumset(DrumsetKind::GUITAR_PRO);
                   instr->setDrumset(gpDrumset);
-                  staff->setStaffType(StaffType::preset(StaffTypes::PERC_DEFAULT));
+                  staff->setStaffType(StaffType::preset(StaffGroup::PERCUSSION)); //cc TODO: CONFIRM
                   }
             else if (patch >= 24 && patch < 32)
                   clefId = ClefType::G3;
@@ -1321,7 +1321,7 @@ void GuitarPro2::read(QFile* fp)
             segment->add(clef);
 
             Channel& ch = instr->channel(0);
-            if (midiChannel == int(StaffTypes::PERC_DEFAULT)) {
+            if (midiChannel == StaffType::_defaultPreset[int(StaffGroup::PERCUSSION)]) {  //cc TODO: CONFIRM
                   ch.program = 0;
                   ch.bank    = 128;
                   }
@@ -1913,7 +1913,7 @@ void GuitarPro3::read(QFile* fp)
                   clefId = ClefType::PERC;
                   // instr->setUseDrumset(DrumsetKind::GUITAR_PRO);
                   instr->setDrumset(gpDrumset);
-                  staff->setStaffType(StaffType::preset(StaffTypes::PERC_DEFAULT));
+                  staff->setStaffType(StaffType::preset(StaffGroup::PERCUSSION)); //cc TODO: CONFIRM
                   }
             else if (patch >= 24 && patch < 32)
                   clefId = ClefType::G3;
@@ -2351,7 +2351,7 @@ Score::FileError importGTP(Score* score, const QString& name)
                   p->setStaves(2);
                   Staff* s1 = p->staff(1);
 
-                  StaffType st = *StaffType::preset(StaffTypes::TAB_DEFAULT);
+                  StaffType st = *StaffType::getDefaultPreset(StaffGroup::TAB); //cc TODO: CONFIRM
                   st.setSlashStyle(true);
                   s1->setStaffType(&st);
                   cloneStaff(s,s1);
@@ -2368,7 +2368,7 @@ Score::FileError importGTP(Score* score, const QString& name)
 
             if (staff->part()->instr()->stringData()->strings() > 0 && part->staves()->front()->staffType()->group() == StaffGroup::STANDARD) {
                   Staff* staff2 = pscore->staff(1);
-                  staff2->setStaffType(StaffType::preset(StaffTypes::TAB_DEFAULT));
+                  staff2->setStaffType(StaffType::getDefaultPreset(StaffGroup::TAB)); //cc TODO: CONFIRM
                   }
 
             //

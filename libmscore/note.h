@@ -23,6 +23,7 @@
 #include "noteevent.h"
 #include "pitchspelling.h"
 #include "accidental.h"
+#include "clef.h"
 
 class QPainter;
 
@@ -303,7 +304,7 @@ class Note : public Element {
       void undoSetTpc2(int tpc)      { undoChangeProperty(P_ID::TPC2, tpc); }
       int transposeTpc(int tpc);
 
-      Accidental* accidental() const    { return _accidental; }
+      Q_INVOKABLE Ms::Accidental* accidental() const; //cc
       void setAccidental(Accidental* a)   { _accidental = a;    }
 
       Accidental::Type accidentalType() const { return _accidental ? _accidental->accidentalType() : Accidental::Type::NONE; }
@@ -440,9 +441,6 @@ class Note : public Element {
       virtual QString screenReaderInfo() override;
       virtual QString accessibleExtraInfo() override;
       };
-
-// extern const SymId noteHeads[2][int(NoteHead::Group::HEAD_GROUPS)][int(NoteHead::Type::HEAD_TYPES)];
-
 
 }     // namespace Ms
 

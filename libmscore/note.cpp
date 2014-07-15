@@ -55,6 +55,7 @@
 #include "glissando.h"
 #include "bagpembell.h"
 #include "hairpin.h"
+#include "notemappings.h" //cc
 
 namespace Ms {
 
@@ -143,7 +144,7 @@ static const char* noteHeadNames[] = {
 
 SymId Note::noteHead(int direction, NoteHead::Group g, NoteHead::Type t)
       {
-      return noteHeads[direction][int(g)][int(t)];
+      return noteHeads[direction][int(g)][int(t)]; 
       };
 
 //---------------------------------------------------------
@@ -445,8 +446,13 @@ SymId Note::noteHead() const
             }
       if (_headType != NoteHead::Type::HEAD_AUTO)
             ht = _headType;
+      //cc
+      SymId t;
+      if(noteMappings())
+            t = noteHead(up, noteMappings()->tpc2HeadGroup(_tpc[0]), ht);
+      else
+            t = noteHead(up, _headGroup, ht);
 
-      SymId t = noteHead(up, _headGroup, ht);
       if (t == SymId::noSym) {
             qDebug("invalid note head %hhd/%hhd", _headGroup, ht);
             t = noteHead(up, NoteHead::Group::HEAD_NORMAL, ht);
@@ -897,7 +903,7 @@ void Note::read(XmlReader& e)
             else if (tag == "veloType")
                   setProperty(P_ID::VELO_TYPE, Ms::getProperty(P_ID::VELO_TYPE, e));
             else if (tag == "line")
-                  _line = e.readInt();
+                 _line = e.readInt();
             else if (tag == "Tie") {
                   Tie* tie = new Tie(score());
                   tie->setParent(this);
@@ -1714,7 +1720,7 @@ bool Note::dotIsUp() const
 
 void Note::updateAccidental(AccidentalState* as)
       {
-      int relLine = absStep(tpc(), epitch());
+      int relLine = absStep(tpc(), epitch(), noteMappings()); //cc
 
       // don't touch accidentals that don't concern tpc such as
       // quarter tones
@@ -1789,6 +1795,20 @@ NoteType Note::noteType() const
       return chord()->noteType();
       }
 
+//-----------------------------------------------------//cc
+//   accidental()
+//          return accidental unless it should be hidden
+//---------------------------------------------------------
+
+Q_INVOKABLE Ms::Accidental* Note::accidental() const
+      {
+      if(noteMappings() && noteMappings()->showAccidentals())
+            return NULL;
+      else
+            return _accidental;
+      }
+
+
 //---------------------------------------------------------
 //   noteTypeUserName
 //---------------------------------------------------------
@@ -1839,7 +1859,7 @@ QPointF Note::canvasPos() const
       }
 
 //---------------------------------------------------------
-//   scanElements
+//   scanElement
 //---------------------------------------------------------
 
 void Note::scanElements(void* data, void (*func)(void*, Element*), bool all)
@@ -1854,9 +1874,9 @@ void Note::scanElements(void* data, void (*func)(void*, Element*), bool all)
             }
       for (Spanner* sp : _spannerFor)
             sp->scanElements(data, func, all);
-
       if (!dragMode && _accidental)
-            func(data, _accidental);
+            if (!noteMappings() || noteMappings()->showAccidentals()) //cc
+                  func(data, _accidental);
       if (chord()) {
             for (int i = 0; i < chord()->dots(); ++i) {
                   if (_dots[i])
@@ -1950,6 +1970,7 @@ void Note::setAccidentalType(Accidental::Type type)
 void Note::setLine(int n)
       {
       _line = n;
+
       int off = 0;
       if (staff())
             off = staff()->staffType()->stepOffset();
@@ -2047,7 +2068,12 @@ void Note::updateRelLine(int relLine, bool undoable)
 
       Staff* s = score()->staff(staffIdx() + chord()->staffMove());
       ClefType clef = s->clef(chord()->tick());
-      int line = relStep(relLine, clef);
+      
+      
+StaffType* k = staff()->staffType();
+      
+      
+      int line = relStep(relLine, clef, staff()->noteMappings());
       if (line != _line) {
             if (undoable)
                   undoChangeProperty(P_ID::LINE, line);
@@ -2062,7 +2088,7 @@ void Note::updateRelLine(int relLine, bool undoable)
 
 void Note::updateLine()
       {
-      int relLine = absStep(tpc(), epitch());
+      int relLine = absStep(tpc(), epitch(), noteMappings()); //cc
       updateRelLine(relLine, false);
       }
 
@@ -2149,6 +2175,8 @@ QVariant Note::getProperty(P_ID propertyId) const
             }
       return Element::getProperty(propertyId);
       }
+
+
 
 //---------------------------------------------------------
 //   setProperty
