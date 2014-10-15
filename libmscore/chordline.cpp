@@ -400,4 +400,3 @@ QString ChordLine::accessibleInfo()
       }
 
 }
-
