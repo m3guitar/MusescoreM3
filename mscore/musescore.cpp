@@ -3883,7 +3883,6 @@ void MuseScore::cmd(QAction* a)
             if (!cv->editMode())
                   cs->startCmd();
             }
-            
       cmd(a, cmdn);
       if (lastShortcut->isCmd())
             cs->endCmd();
@@ -4757,7 +4756,7 @@ int main(int argc, char* av[])
 
       if (!useFactorySettings)
             preferences.read();
-          
+
       preferences.readDefaultStyle();
 
       if (converterDpi == 0)

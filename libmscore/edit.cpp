@@ -749,7 +749,7 @@ void Score::addPitch(int step, bool addFlag)
       pos.segment   = inputState().segment();
       pos.staffIdx  = inputState().track() / VOICES;
       ClefType clef = staff(pos.staffIdx)->clef(pos.segment->tick());
-      pos.line      = relStep(step, clef, selection().element()->noteMappings()); //cc TODO: FIX PROBABLY GOING TO ADD WRONG PITCH
+      pos.line      = relStep(step, clef, selection().element()->noteMappings()); //cc
 
       if (addFlag) {
             Element* el = selection().element();

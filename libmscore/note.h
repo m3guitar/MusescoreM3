@@ -442,6 +442,9 @@ class Note : public Element {
       virtual QString accessibleExtraInfo() override;
       };
 
+// extern const SymId noteHeads[2][int(NoteHead::Group::HEAD_GROUPS)][int(NoteHead::Type::HEAD_TYPES)];
+
+
 }     // namespace Ms
 
 Q_DECLARE_METATYPE(Ms::NoteHead::Group);

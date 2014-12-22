@@ -215,7 +215,7 @@ void Preferences::init()
 #else
       nativeDialogs           = false;    // don't use system native file dialogs
 #endif
-         
+
       exportAudioSampleRate   = exportAudioSampleRates[0];
 
       workspace               = "Basic";

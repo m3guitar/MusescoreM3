@@ -880,7 +880,7 @@ void StaffLines::layout()
 //---------------------------------------------------------
 //   draw
 //---------------------------------------------------------
-      
+
 void StaffLines::draw(QPainter* painter) const
       {
       QPointF _pos(0.0, 0.0);
@@ -918,7 +918,8 @@ void StaffLines::draw(QPainter* painter) const
             painter->drawLine(QLineF(x1, y, x2, y));
             }
 
-      //cc_temp DOTTED LINE HACK
+#if 0
+      //dotted line hack, experimental
       bool dottedLines = false;
       if (dottedLines) {
             QPen dottedPen(curColor(), lw, Qt::SolidLine, Qt::FlatCap);
@@ -943,6 +944,9 @@ void StaffLines::draw(QPainter* painter) const
             painter->setPen(QPen(curColor(), lw, Qt::SolidLine, Qt::FlatCap));
             painter->drawLines(ll);
             }
+#endif
+      painter->setPen(QPen(curColor(), lw, Qt::SolidLine, Qt::FlatCap));
+      painter->drawLines(ll);
       }
 
 //---------------------------------------------------------
