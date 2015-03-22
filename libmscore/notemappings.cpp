@@ -10,7 +10,7 @@
 //  the file LICENCE.GPL
 //=============================================================================
 
-#include "NoteMappings.h"
+#include "notemappings.h"
 #include "xml.h"
 
 //cc
